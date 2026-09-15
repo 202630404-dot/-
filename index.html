@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>핑계의 정석 | 위기 탈출 맞춤형 솔루션</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700;900&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.85);
+            --accent-gold: #d4af37;
+            --accent-gold-hover: #b89628;
+            --text-title: #f0f6fc;
+            --text-body: #c9d1d9;
+            --text-muted: #8b949e;
+            --border-color: rgba(212, 175, 55, 0.25);
+            --input-bg: #161b22;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(88, 166, 255, 0.05) 0%, transparent 40%);
+            color: var(--text-body);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 720px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 48px 36px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            border: 1px solid var(--border-color);
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        h1 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--text-title);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        p.description {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-title);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        label .required {
+            color: var(--accent-gold);
+            font-size: 12px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 18px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-title);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+
+        .tone-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .tone-card {
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tone-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        .tone-card.selected {
+            background: rgba(212, 175, 55, 0.12);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .tone-card .icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .tone-card .title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .submit-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #d4af37, #aa8310);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 36px;
+            padding: 28px;
+            background: rgba(13, 17, 23, 0.9);
+            border: 1px solid var(--accent-gold);
+            border-radius: 16px;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+
+        .result-head h2 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 18px;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-body {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-title);
+            white-space: pre-line;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-title);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-gold);
+            color: #000;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 550px) {
+            .wrapper {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 28px;
+            }
+            .tone-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <header>
+            <span class="badge">The Art of Excuse</span>
+            <h1>핑계의 정석</h1>
+            <p class="description">난처한 상황에서도 품격과 명분을 지켜주는 맞춤형 핑계를 제안합니다.</p>
+        </header>
+
+        <form id="excuseForm" onsubmit="handleGenerate(event)">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="mistake">1. 잘못한 내용 <span class="required">* 필수</span></label>
+                    <input type="text" id="mistake" placeholder="예: 약속 시간 1시간 지각, 서류 제출 기한 미동수, 연락 두절" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="target">2. 대상 (상대방) <span class="required">* 필수</span></label>
+                    <input type="text" id="target" placeholder="예: 직장 상사, 팀장님, 연인, 친구, 교수님" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="location">3. 장소 및 상황 <span class="required">* 필수</span></label>
+                    <input type="text" id="location" placeholder="예: 회의실, 약속 장소 카페, 집, 카톡 대화방" required>
+                </div>
+
+                <div class="input-group">
+                    <label>4. 핑계의 스타일 (스타일 선택)</label>
+                    <div class="tone-selector">
+                        <div class="tone-card selected" onclick="setTone('polite', this)">
+                            <span class="icon">📜</span>
+                            <span class="title">정중 / 진지</span>
+                        </div>
+                        <div class="tone-card" onclick="setTone('witty', this)">
+                            <span class="icon">💡</span>
+                            <span class="title">위트 / 재치</span>
+                        </div>
+                        <div class="tone-card" onclick="setTone('dramatic', this)">
+                            <span class="icon">🎭</span>
+                            <span class="title">드라마틱</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">✨ 맞춤 핑계 생성하기</button>
+            </div>
+        </form>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-head">
+                <h2>📖 정석 솔루션</h2>
+                <span id="toneBadge" style="font-size: 12px; color: var(--accent-gold); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 4px;">정중 / 진지</span>
+            </div>
+            <div class="result-body" id="resultText"></div>
+            <div class="btn-group">
+                <button type="button" class="action-btn" onclick="copyExcuse()">📋 핑계 복사하기</button>
+                <button type="button" class="action-btn" onclick="retryGenerate()">🔄 다른 핑계 보기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">복사가 완료되었습니다!</div>
+
+    <script>
+        let currentTone = 'polite';
+        let excuseIndex = 0;
+
+        const excuseTemplates = {
+            polite: [
+                (target, location, mistake) => `${target}님, 정말 죄송합니다.\n${location}(으)로 이동하는 과정에서 예측하지 못한 돌발 상황(건물 내 통신 및 기기 결함)이 발생하여 ${mistake}(을/를) 하게 되었습니다.\n\n미리 명확하게 안내해 드리지 못한 점 고개 숙여 사과드리며, 차후에는 더욱 철저히 대비하여 같은 불편을 드리지 않도록 하겠습니다.`,
+                (target, location, mistake) => `${target}님, 우선 진심 어린 사과의 말씀을 올립니다.\n오늘 ${location} 상황을 준비하던 중 갑작스러운 긴급 수습 건이 생겨 본의 아니게 ${mistake}(이/가) 발생하게 되었습니다.\n\n너그럽게 양해해 주신다면 지적해 주신 부분 즉시 수습하여 완벽히 마무리 짓도록 하겠습니다.`
+            ],
+            witty: [
+                (target, location, mistake) => `${target}님! 정말 억울한 사연이 하나 있습니다...\n${location}(으)로 향하려던 바로 그 순간, 세상의 모든 불운(배터리 1% 방전 및 도로 돌발 통제)이 한꺼번에 겹치는 바람에 본의 아니게 ${mistake}(을/를) 범하고 말았습니다. 😅\n\n오늘의 억울함은 제가 다 끌어안을 테니, 부디 넓은 마음으로 한 번만 너그럽게 봐주시면 감사하겠습니다!`,
+                (target, location, mistake) => `${target}님, 이건 정말 제 의도와 너무나 다르게 흘러간 비극입니다!\n${location}에서 선보일 제 계획은 완벽했으나, 예기치 못한 유령 같은 변수가 개입하여 결국 ${mistake}(을/를) 하게 되었습니다...\n\n다음번엔 200% 완벽한 모습으로 보답할 테니 이번 한 번만 너그럽게 품어주십시오!`
+            ],
+            dramatic: [
+                (target, location, mistake) => `(긴박한 어조로) ${target}님... 이제야 겨우 소식을 전합니다.\n오늘 ${location}(으)로 가던 길에 제 힘으로는 도저히 제어할 수 없는 일련의 사건들이 도미노처럼 터지며 결국 ${mistake}(을/를) 상황에 처하고 말았습니다.\n\n지금 제 심정이 너무나 참담하고 송구스러울 따름입니다. 조만간 직접 찾아뵙고 사정을 상세히 말씀드리겠습니다.`,
+                (target, location, mistake) => `${target}님, 마치 영화 속 한 장면 같은 시련이 ${location}에서 일어났습니다...\n그 여파로 안타깝게도 ${mistake}(을/를) 하게 되었고, 저 스스로도 깊은 당황과 죄송함을 금할 길이 없습니다.\n\n부디 너그러운 마음으로 한 번만 사정을 살펴주신다면 더할 나위 없이 감사하겠습니다.`
+            ]
+        };
+
+        function setTone(tone, element) {
+            currentTone = tone;
+            document.querySelectorAll('.tone-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function handleGenerate(e) {
+            e.preventDefault();
+            excuseIndex = Math.floor(Math.random() * 2);
+            renderExcuse();
+        }
+
+        function retryGenerate() {
+            excuseIndex = (excuseIndex + 1) % 2;
+            renderExcuse();
+        }
+
+        function renderExcuse() {
+            const mistake = document.getElementById('mistake').value.trim();
+            const target = document.getElementById('target').value.trim();
+            const location = document.getElementById('location').value.trim();
+
+            if (!mistake || !target || !location) return;
+
+            const text = excuseTemplates[currentTone][excuseIndex](target, location, mistake);
+            
+            const toneMap = {
+                polite: '정중 / 진지',
+                witty: '위트 / 재치',
+                dramatic: '드라마틱'
+            };
+
+            document.getElementById('toneBadge').innerText = toneMap[currentTone];
+            document.getElementById('resultText').innerText = text;
+
+            const container = document.getElementById('resultContainer');
+            container.style.display = 'block';
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyExcuse() {
+            const text = document.getElementById('resultText').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+    </script>
+</body>
+</html>
