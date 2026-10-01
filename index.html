@@ -432,7 +432,7 @@
         </div>
       </div>
 
-      <button class="btn" onclick="generateExcuse()">핑계 다시 생성하기 🚀</button>
+      <button class="btn" id="generate-submit-btn" onclick="generateExcuse()">핑계 생성하기 🚀</button>
     </div>
 
     <!-- 로딩 화면 -->
@@ -467,7 +467,7 @@
 
         <p class="result-text" id="res-content">생성된 핑계가 출력됩니다.</p>
 
-        <!-- 반응 버튼 (맘에 들어요 버튼만 유지) -->
+        <!-- 반응 버튼 -->
         <div class="reaction-group">
           <button class="reaction-btn" id="btn-like" onclick="triggerLikeEffect()">
             👍 맘에 들어요
@@ -490,6 +490,7 @@
     let currentTone = '정중함';
     let currentStyle = '안전';
     let lastGeneratedIndex = -1;
+    let hasGeneratedOnce = false; // 최초 생성 여부 플래그
 
     function toggleClearBtn(input) {
       const clearBtn = input.nextElementSibling;
@@ -536,6 +537,8 @@
       document.getElementById('input-target').value = '';
       document.querySelectorAll('.clear-btn').forEach(b => b.style.display = 'none');
       lastGeneratedIndex = -1;
+      hasGeneratedOnce = false; // 초기화 시 버튼 텍스트 원복
+      document.getElementById('generate-submit-btn').innerText = '핑계 생성하기 🚀';
       nextPage(1);
     }
 
@@ -560,6 +563,12 @@
         document.getElementById('res-tags').innerText = `${currentTone} · ${currentStyle} 핑계`;
         document.getElementById('res-rate-num').innerText = `${resultData.rate}%`;
         document.getElementById('res-content').innerText = resultData.text;
+
+        // 첫 생성 이후부터는 버튼 문구를 '핑계 다시 생성하기 🚀'로 변경
+        if (!hasGeneratedOnce) {
+          hasGeneratedOnce = true;
+          document.getElementById('generate-submit-btn').innerText = '핑계 다시 생성하기 🚀';
+        }
 
         nextPage(4);
 
