@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>핑계의 정석</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-main: #111827;
+      --text-sub: #6b7280;
+      --border-color: #e5e7eb;
+      --primary-blue: #2563eb;
+      --primary-blue-hover: #1d4ed8;
+      --card-bg: #f9fafb;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      background: #ffffff;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .title-group {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .site-title {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .step-indicator {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-blue);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: 1.5px;
+    }
+
+    .sub-title {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .label {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: block;
+      color: #374151;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 40px 14px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 12px;
+      background: #e5e7eb;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 11px;
+      color: #4b5563;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .grid-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .grid-options.single-col {
+      grid-template-columns: 1fr;
+    }
+
+    .option-btn {
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s ease;
+      color: var(--text-main);
+    }
+
+    .option-btn:hover {
+      border-color: #9ca3af;
+    }
+
+    .option-btn.selected {
+      background: #eff6ff;
+      color: var(--primary-blue);
+      border-color: var(--primary-blue);
+      font-weight: 700;
+    }
+
+    .style-card {
+      text-align: left;
+      padding: 14px 16px;
+    }
+
+    .style-card .desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--primary-blue);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn:hover {
+      background: var(--primary-blue-hover);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: #f3f4f6;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .loading-box {
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border: 3px solid #e5e7eb;
+      border-top: 3px solid var(--primary-blue);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .result-card {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 22px;
+      background: var(--card-bg);
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .badge-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      font-size: 12px;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .rate-box {
+      margin-bottom: 18px;
+    }
+
+    .rate-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #10b981;
+      width: 0%;
+      transition: width 0.6s ease-out;
+      border-radius: 10px;
+    }
+
+    .result-text {
+      font-size: 15px;
+      line-height: 1.7;
+      word-break: keep-all;
+      white-space: pre-line;
+      color: #1f2937;
+      border-top: 1px dashed #e5e7eb;
+      padding-top: 16px;
+    }
+
+    /* 반응 버튼 영역 */
+    .reaction-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .reaction-btn {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      color: #4b5563;
+    }
+
+    .reaction-btn:hover {
+      background: #f3f4f6;
+      transform: translateY(-2px);
+    }
+
+    .reaction-btn.active-like {
+      background: #eff6ff;
+      border-color: var(--primary-blue);
+      color: var(--primary-blue);
+    }
+
+    .toast {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(17, 24, 39, 0.9);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- 1페이지: 메인 -->
+    <div id="page-1" class="page active">
+      <div class="title-group" style="margin-top: 30px; margin-bottom: 36px;">
+        <h1 class="site-title">핑계의 정석</h1>
+        <p class="sub-title">곤란한 순간을 모면하는 완벽한 솔루션<br>상황에 알맞은 최적의 핑계를 생성해드립니다.</p>
+      </div>
+      <button class="btn" onclick="nextPage(2)">핑계 생성하기</button>
+    </div>
+
+    <!-- 2페이지: 입력 -->
+    <div id="page-2" class="page">
+      <div class="title-group">
+        <div class="step-indicator">Step 01</div>
+        <h2 style="font-size: 20px;">상황 입력</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="label">잘못한 점</label>
+        <div class="input-wrapper">
+          <input type="text" id="input-mistake" placeholder="예: 약속 시간에 1시간 지각함" oninput="toggleClearBtn(this)">
+          <button class="clear-btn" onclick="clearInput('input-mistake', this)">✕</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label">대상 및 장소/상황</label>
+        <div class="input-wrapper">
+          <input type="text" id="input-target" placeholder="예: 팀장님 / 출근길 대중교통" oninput="toggleClearBtn(this)">
+          <button class="clear-btn" onclick="clearInput('input-target', this)">✕</button>
+        </div>
+      </div>
+
+      <button class="btn" onclick="goToModifyPage()">다음 단계로</button>
+    </div>
+
+    <!-- 3페이지: 어투 & 스타일 선택 (통합 수정 페이지) -->
+    <div id="page-3" class="page">
+      <div class="title-group">
+        <div class="step-indicator">Step 02</div>
+        <h2 style="font-size: 20px;">어투 및 스타일 설정</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="label">어투 선택</label>
+        <div class="grid-options">
+          <button class="option-btn tone-btn selected" onclick="selectTone(this, '정중함')">정중함</button>
+          <button class="option-btn tone-btn" onclick="selectTone(this, '억울함')">억울함</button>
+          <button class="option-btn tone-btn" onclick="selectTone(this, '장문')">장문</button>
+          <button class="option-btn tone-btn" onclick="selectTone(this, '단문')">단문</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label">핑계 스타일 선택</label>
+        <div class="grid-options single-col">
+          <button class="option-btn style-btn style-card selected" onclick="selectStyle(this, '안전')">
+            <div>🟢 안전한 핑계</div>
+            <div class="desc">누구나 무난하게 수긍할 수 있는 안정적인 알리바이</div>
+          </button>
+          <button class="option-btn style-btn style-card" onclick="selectStyle(this, '창의')">
+            <div>🟡 창의적인 핑계</div>
+            <div class="desc">의외의 변수를 활용하여 의구심을 철저히 차단</div>
+          </button>
+          <button class="option-btn style-btn style-card" onclick="selectStyle(this, '파격')">
+            <div>🔴 파격적인 핑계</div>
+            <div class="desc">상대방이 더 이상 추궁할 수 없게 만드는 확실한 한 방</div>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn" onclick="generateExcuse()">핑계 다시 생성하기 🚀</button>
+    </div>
+
+    <!-- 로딩 화면 -->
+    <div id="page-loading" class="page">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <p style="font-size: 15px; font-weight: 600;" id="loading-msg">상황 분석 중...</p>
+      </div>
+    </div>
+
+    <!-- 4페이지: 결과 화면 -->
+    <div id="page-4" class="page">
+      <div class="title-group">
+        <div class="step-indicator">Result</div>
+        <h2 style="font-size: 20px;">최적의 핑계 해설</h2>
+      </div>
+
+      <div class="result-card">
+        <div class="badge-group">
+          <span class="tag" id="res-tags">정중함 · 안전한 핑계</span>
+        </div>
+
+        <div class="rate-box">
+          <div class="rate-info">
+            <span style="color: #4b5563;">예상 성공 확률</span>
+            <span id="res-rate-num" style="color: #10b981;">92%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="res-progress"></div>
+          </div>
+        </div>
+
+        <p class="result-text" id="res-content">생성된 핑계가 출력됩니다.</p>
+
+        <!-- 반응 버튼 (맘에 들어요 버튼만 유지) -->
+        <div class="reaction-group">
+          <button class="reaction-btn" id="btn-like" onclick="triggerLikeEffect()">
+            👍 맘에 들어요
+          </button>
+        </div>
+      </div>
+
+      <button class="btn" onclick="copyResult()">📋 텍스트 복사하기</button>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="nextPage(3)">🔄 다른 핑계 생성하기</button>
+        <button class="btn btn-secondary" onclick="resetAll()">🏠 처음으로</button>
+      </div>
+
+      <div id="toast" class="toast">클립보드에 복사되었습니다!</div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentTone = '정중함';
+    let currentStyle = '안전';
+    let lastGeneratedIndex = -1;
+
+    function toggleClearBtn(input) {
+      const clearBtn = input.nextElementSibling;
+      clearBtn.style.display = input.value.length > 0 ? 'flex' : 'none';
+    }
+
+    function clearInput(id, btn) {
+      const input = document.getElementById(id);
+      input.value = '';
+      btn.style.display = 'none';
+      input.focus();
+    }
+
+    function selectTone(el, tone) {
+      document.querySelectorAll('.tone-btn').forEach(btn => btn.classList.remove('selected'));
+      el.classList.add('selected');
+      if (currentTone !== tone) {
+        currentTone = tone;
+        lastGeneratedIndex = -1;
+      }
+    }
+
+    function selectStyle(el, style) {
+      document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('selected'));
+      el.classList.add('selected');
+      if (currentStyle !== style) {
+        currentStyle = style;
+        lastGeneratedIndex = -1;
+      }
+    }
+
+    function nextPage(pageNumber) {
+      resetReactions();
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById(`page-${pageNumber}`).classList.add('active');
+    }
+
+    function goToModifyPage() {
+      nextPage(3);
+    }
+
+    function resetAll() {
+      document.getElementById('input-mistake').value = '';
+      document.getElementById('input-target').value = '';
+      document.querySelectorAll('.clear-btn').forEach(b => b.style.display = 'none');
+      lastGeneratedIndex = -1;
+      nextPage(1);
+    }
+
+    function resetReactions() {
+      const likeBtn = document.getElementById('btn-like');
+      if (likeBtn) likeBtn.classList.remove('active-like');
+    }
+
+    function generateExcuse() {
+      const mistake = document.getElementById('input-mistake').value.trim() || '갑작스러운 차질';
+      const rawTarget = document.getElementById('input-target').value.trim() || '상대방';
+
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById('page-loading').classList.add('active');
+
+      const msgs = ["상황 분석 중...", "알리바이 조합 중...", "핑계 문장 다듬는 중..."];
+      document.getElementById('loading-msg').innerText = msgs[Math.floor(Math.random() * msgs.length)];
+
+      setTimeout(() => {
+        const resultData = buildUniqueExcuse(mistake, rawTarget, currentTone, currentStyle);
+
+        document.getElementById('res-tags').innerText = `${currentTone} · ${currentStyle} 핑계`;
+        document.getElementById('res-rate-num').innerText = `${resultData.rate}%`;
+        document.getElementById('res-content').innerText = resultData.text;
+
+        nextPage(4);
+
+        setTimeout(() => {
+          document.getElementById('res-progress').style.width = `${resultData.rate}%`;
+        }, 100);
+      }, 500);
+    }
+
+    /* 엄지 버튼: 폭죽 연출 */
+    function triggerLikeEffect() {
+      const likeBtn = document.getElementById('btn-like');
+      likeBtn.classList.add('active-like');
+
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 }
+        });
+        confetti({
+          particleCount: 50,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 }
+        });
+      }, 150);
+    }
+
+    function formatTarget(target) {
+      if (!target) return '상대방';
+      const titleRegex = /(님|선생님|팀장님|부장님|과장님|대리님|교수님|선배님|아빠|엄마|선배|후배)$/;
+      if (titleRegex.test(target)) return target;
+      return target + '님';
+    }
+
+    function attachJosa(word, type) {
+      if (!word) return "";
+      const lastChar = word.charCodeAt(word.length - 1);
+      const hasBatchim = (lastChar - 0xac00) % 28 !== 0;
+      
+      if (type === '으로/로') return hasBatchim ? `${word}으로` : `${word}로`;
+      if (type === '을/를') return hasBatchim ? `${word}을` : `${word}를`;
+      return word;
+    }
+
+    function buildUniqueExcuse(mistake, rawTarget, tone, style) {
+      const target = formatTarget(rawTarget);
+      const mWithJosa = attachJosa(mistake, '으로/로');
+      const mObject = attachJosa(mistake, '을/를');
+
+      let rate = 85;
+      if (style === '안전') rate = Math.floor(Math.random() * 6) + 91;
+      if (style === '창의') rate = Math.floor(Math.random() * 10) + 79;
+      if (style === '파격') rate = Math.floor(Math.random() * 15) + 65;
+
+      const templates = {
+        '정중함': {
+          '안전': [
+            `${target}, 정말 죄송합니다. 이동하는 과정에서 예상치 못하게 ${mWithJosa} 인한 상황이 발생하여 다소 지연되고 있습니다.\n\n사전에 미리 공유드렸어야 했는데 급히 현장을 수습하느라 연락이 늦었습니다. 정리되는 대로 빠르게 다시 연락드리겠습니다.`,
+            `본의 아니게 ${mWithJosa} 일정에 차질을 드리게 되어 고개 숙여 사과드립니다, ${target}.\n\n최대한 빨리 수습 후 차질 없도록 진행 상황을 다시 보고드리겠습니다. 넓은 양해 부탁드립니다.`,
+            `${target}, 깊이 사과드립니다. 준비하던 중 갑작스런 ${mWithJosa} 예기치 못한 문제가 생겨 제시간에 대처하지 못했습니다.\n\n이유를 불문하고 제 불찰이며, 조속히 정리 후 바로 연락 올리겠습니다.`,
+            `죄송합니다, ${target}. 출발 전 예상치 못한 ${mWithJosa} 문제가 생겨 급하게 대응하느라 지연되었습니다.\n\n기다리시지 않도록 최대한 빠르게 수습하여 이동하도록 하겠습니다.`
+          ],
+          '창의': [
+            `${target}, 오던 길에 건물 엘리베이터가 갑자기 점검으로 멈춰서 갇히는 바람에 ${mObject} 제때 처리하지 못했습니다.\n\n돌발 변수라 사전에 연락을 못 드렸는데, 방금 막 조치가 완료되어 서둘러 대응하고 있습니다.`,
+            `정말 죄송합니다, ${target}. 이동 경로 중 도로 통제 및 사고 수습 여파로 ${mWithJosa} 예상치 못한 심각한 지연이 생겼습니다.\n\n우회 경로를 통해 서둘러 이동 중이며 조속히 수습하겠습니다.`,
+            `${target}, 오늘 결제/통신 시스템에 잠시 락이 걸리면서 ${mObject} 수습하느라 발이 묶여 있었습니다.\n\n고객센터를 통해 방금 처리하여 서둘러 이동하고 있습니다. 죄송합니다.`,
+            `정말 민망하지만 오던 중 가방 소지품이 전면 손상되는 사고가 발생해 ${mWithJosa} 난리가 났었습니다.\n\n급한 상황만 우선 정리 후 서둘러 이동 중입니다. 죄송합니다, ${target}.`
+          ],
+          '파격': [
+            `${target}, 정말 죄송합니다. 갑작스럽게 가족 쪽에 응급 상황이 발생하여 수습하느라 ${mObject} 신경 쓸 겨를이 없었습니다.\n\n경황이 없어 이제야 연락을 드립니다. 상황 정리 후 다시 정식으로 경위를 설명해 드리겠습니다.`,
+            `불가피한 악재로 인해 ${mWithJosa} 심각한 차질이 발생했습니다, ${target}.\n\n현장에서 즉시 대처해야만 하는 불가항력적 사태였기에 연락이 늦었습니다. 정리되는 즉시 사유서와 함께 보고드리겠습니다.`,
+            `${target}, 정말 송구스럽게도 오늘 개인적인 건강상의 긴급한 문제로 ${mObject} 즉시 이행하기 어려운 상황이 되었습니다.\n\n우선 조치 후 바로 연락 올리도록 하겠습니다. 양해해 주시면 감사하겠습니다.`,
+            `상당히 당황스러우시겠지만 ${mWithJosa} 현장에서 아주 심각한 오류가 터져 전면 재작업을 해야 하는 상황입니다, ${target}.\n\n사태를 조속히 진화하고 다시 말씀드리겠습니다.`
+          ]
+        },
+        '억울함': {
+          '안전': [
+            `아 진짜 너무 죄송해요 ${target}... 분명 다 준비해뒀는데 중간에 ${mWithJosa} 상황이 예고도 없이 터져버렸어요 ㅠㅠ\n\n저도 너무 당황스러운데 진짜 열심히 수습하고 있으니까 조금만 기다려주세요!`,
+            `진짜 속상하네요... 미리 신경 쓴다고 했는데 하필 지금 ${mWithJosa} 일이 이렇게 꼬일 줄은 꿈에도 몰랐어요, ${target}.\n\n최대한 빨리 해결하고 바로 연락드릴게요!`,
+            `아니 가기 직전까지 아무 문제 없었는데 갑자기 ${mWithJosa} 일이 터지면 어떡하나요 ㅠㅠ ${target} 정말 죄송합니다.\n\n급한 불만 빨리 끄고 서둘러 갈게요!`,
+            `진짜 저도 너무 억울하고 답답합니다... ${target} 보러 가는 길에 ${mWithJosa} 사고가 생겨서 발이 꽁꽁 묶였습니다.\n\n최대한 서둘러 볼게요 정말 죄송해요!`
+          ],
+          '창의': [
+            `아니 진짜 억울해서 말이 안 나오네요... ${target} 만나러 가는 길에 휴대폰 단말기가 먹통이 돼서 ${mObject} 해결할 방법이 없었어요.\n\n겨우 재부팅해서 연락드립니다 ㅠㅠ 금방 갈게요!`,
+            `진짜 오늘 왜 이러죠... 오던 길에 대중교통 배차 착오랑 도로 통제가 겹쳐서 ${mWithJosa} 난리가 났어요 ㅠㅠ\n\n택시 타고 우회 중입니다, ${target} 조금만 기다려주세요!`,
+            `${target} 진짜 황당한 게 오다가 건물 셔터가 고장 나서 안에 갇혀 있었습니다 ㅠㅠ\n\n119 불러서 겨우 빠져나왔어요... ${mWithJosa} 난리가 났는데 금방 넘어갈게요!`,
+            `아니 가방끈이 갑자기 터져서 소지품이 길바닥에 다 쏟아졌어요 ㅠㅠ ${target} 너무 죄송해요, ${mWithJosa} 줍고 수습하느라 지체됐습니다.`
+          ],
+          '파격': [
+            `저 오늘 진짜 일진이 왜 이럴까요... 오다가 다른 사람 사고에 휘말려 목격자 진술해 주느라 ${mWithJosa} 지연됐습니다 ㅠㅠ\n\n${target} 진짜 죄송해요, 경찰서에서 방금 나왔는데 빛의 속도로 가겠습니다!`,
+            `진짜 말도 안 되는 일인데 카드가 긁히질 않아서 대중교통 이용도 못하고 ${mWithJosa} 멘붕이 왔었어요 ㅠㅠ\n\n${target} 계좌이체 겨우 처리하고 출발합니다, 죄송해요!`,
+            `아니 도둑 맞은 줄 알고 경찰 신고하고 난리 쳤는데 단순 해프닝이었어요 ㅠㅠ ${mWithJosa} 완전 멘탈 나갔었습니다, ${target}.\n\n정리하고 바로 이동하겠습니다!`,
+            `${target} 진짜 억울해요... 오다가 옆 차가 물을 다 튀겨서 옷이 다 젖는 바람에 ${mWithJosa} 난리가 났었어요.\n\n수습하고 바로 갈게요 정말 죄송합니다!`
+          ]
+        },
+        '장문': {
+          '안전': [
+            `우선 ${target}께 심려를 끼쳐드려 진심으로 죄송하다는 말씀부터 올립니다.\n\n오늘 예정된 일정과 관련하여 차질 없이 진행하고자 준비를 마쳤으나, 뜻하지 않게 ${mWithJosa} 예상치 못한 변수가 발생하였습니다.\n\n모든 것이 제 불찰이며 현 상황을 가장 빠른 시일 내에 수습하여 차질이 없도록 하겠습니다. 넓은 양해를 부탁드립니다.`,
+            `${target}, 항상 믿어주셨는데 본의 아니게 ${mWithJosa} 불편을 드려 마음이 무겁습니다.\n\n현장에서 즉각 대처하느라 사전에 미리 연락을 드리지 못했던 점 사과드립니다.\n\n조속히 문제를 마무리 짓고 정상화하여 다시 경위를 보고드리겠습니다.`,
+            `불가피한 사정으로 인해 예정된 시간을 맞추지 못하게 되어 ${target}께 진심으로 사죄의 말씀을 드립니다.\n\n갑작스러운 ${mWithJosa} 여파로 인해 여러 절차가 지연되었습니다.\n\n최선을 다해 상황을 진화하고 있으니 잠시만 시간을 주시면 감사하겠습니다.`,
+            `예상치 못한 사태로 인해 차질을 발생시킨 점에 대해 ${target}께 깊은 책임감을 느낍니다.\n\n금일 발생한 ${mWithJosa} 건은 사전 점검에도 불구하고 터진 돌발 상황이었습니다.\n\n빠른 복구 후 즉시 연락드리도록 하겠습니다.`
+          ],
+          '창의': [
+            `${target}, 우선 예상치 못한 상황으로 불편을 드려 대단히 죄송합니다.\n\n금일 이동 과정에서 외부 데이터 결제 시스템 오류 및 ${mWithJosa} 연쇄적인 지연이 발생하였습니다.\n\n현장에서 직접 발로 뛰며 대처하느라 연락이 다소 늦어졌으나, 현재는 대안을 찾아 빠르게 이동 중입니다.`,
+            `안내해 드린 내용과 달리 ${mWithJosa} 차질이 생긴 점에 대해 ${target}께 진심으로 사과드립니다.\n\n현장 인프라 문제로 인해 예기치 못한 돌발 변수가 형성되었으며, 이를 조치하기 위한 필수 시간이 소요되었습니다.\n\n정리 완료되는 즉시 재차 안내해 드리겠습니다.`,
+            `뜻밖의 해프닝으로 인해 예정된 일정에 차질을 빚게 되어 ${target}께 죄송한 마음뿐입니다.\n\n이동 경로 내에서 발생한 도로 통제 및 ${mWithJosa} 사건으로 주변 전체가 마비되었던 상황이었습니다.\n\n우회로를 확보했으니 조속히 복귀하겠습니다.`,
+            `사전에 만반의 준비를 다하였으나 ${mWithJosa} 원인 모를 기기 장애가 겹치며 도착 및 완수가 지연되었습니다.\n\n${target}께 불필요한 기다림을 드려 송구스러우며, 조속히 완료 후 뵙겠습니다.`
+          ],
+          '파격': [
+            `${target}께 불가피하게 안 좋은 소식을 전해드리게 되어 마음이 매우 무겁습니다.\n\n금일 발생한 ${mWithJosa} 관련 건은 개인의 주의를 넘어 현장에서 발생한 불가항력적 사태였습니다.\n\n이로 인해 계획된 일정을 일시 중단할 수밖에 없었음을 양해해 주시기 바라며, 신속히 수습 후 경위를 정식 보고하겠습니다.`,
+            `상당히 난처한 실수를 전해드리게 되어 ${target}께 진심으로 사과의 말씀을 올립니다.\n\n갑작스러운 개인적 응급 사고 및 ${mWithJosa} 문제로 인해 현 상황을 즉시 이행할 수 없는 단계에 도달했습니다.\n\n급한 사태 해결 직후 사유서와 함께 사죄드리겠습니다.`,
+            `중대한 일정임에도 불구하고 ${mWithJosa} 불미스러운 사건에 연루되어 제때 이행하지 못했습니다.\n\n${target}의 기대에 부응하지 못해 송구하며, 법적/행정적 수습 절차가 끝나는 대로 빠른 복귀를 약속드립니다.`,
+            `심각한 상황으로 인해 예정대로 일정을 소화할 수 없게 되었음을 ${target}께 알립니다.\n\n${mWithJosa} 발생한 사고로 현장이 전면 통제되었으며, 관계자 대동하에 진술 및 처리를 진행 중입니다.\n\n정리되는 대로 즉시 복귀하겠습니다.`
+          ]
+        },
+        '단문': {
+          '안전': [
+            `${target}, 정말 죄송합니다. 갑작스러운 ${mWithJosa} 늦어지고 있습니다. 수습하는 대로 바로 연락드리겠습니다!`,
+            `죄송합니다! 현장에서 ${mWithJosa} 지연이 생겨 조금 늦어질 것 같습니다. 빠르게 이동하겠습니다, ${target}.`,
+            `${target}, 정말 죄송합니다. 출발 직전 ${mWithJosa} 차질이 생겨 수습 중입니다. 빠르게 이동하겠습니다!`,
+            `죄송합니다, ${target}. 오던 길에 ${mWithJosa} 조율하느라 지연되었습니다. 금방 이동하겠습니다!`
+          ],
+          '창의': [
+            `${target}, 오던 중 도로 사고 통제 및 ${mWithJosa} 연락이 늦었습니다. 지금 바로 조치 후 가겠습니다!`,
+            `건물 정전 사고로 ${mWithJosa} 발이 묶여 있었습니다. 방금 해결되어 서둘러 가고 있습니다, ${target}!`,
+            `단말기 결제 오류로 ${mWithJosa} 시간이 지체되었습니다. 서둘러 이동하겠습니다, ${target}!`,
+            `${target}, 오던 중 소지품을 분실해서 ${mWithJosa} 난리가 났었습니다. 정리 후 바로 가겠습니다!`
+          ],
+          '파격': [
+            `급한 돌발 사고(${mWithJosa} 인한 건)로 지연 중입니다. 정리되는 즉시 연락드리겠습니다, ${target}.`,
+            `${target}, 긴급 응급 상황이 생겨 ${mWithJosa} 대응 중입니다. 수습 후 즉시 연락 올리겠습니다!`,
+            `현장 전면 통제로 ${mWithJosa} 이동이 안 되고 있습니다. 정리되는 대로 바로 가겠습니다!`,
+            `${target}, 개인적 긴급 사정(${mWithJosa} 발생)으로 지연 중입니다. 수습 후 바로 연락드리겠습니다.`
+          ]
+        }
+      };
+
+      const optionList = templates[tone]?.[style] || templates['정중함']['안전'];
+
+      let newIndex = Math.floor(Math.random() * optionList.length);
+      if (optionList.length > 1) {
+        while (newIndex === lastGeneratedIndex) {
+          newIndex = Math.floor(Math.random() * optionList.length);
+        }
+      }
+      lastGeneratedIndex = newIndex;
+
+      return { text: optionList[newIndex], rate };
+    }
+
+    function copyResult() {
+      const textToCopy = document.getElementById('res-content').innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+  </script>
+</body>
+</html>
